@@ -17,14 +17,22 @@ app.post('/contact', (req, res) => {
   const { name, email, phone, subject, message, preferredTime } = req.body;
 
   // Log to console (in production, replace with nodemailer or a DB)
-  console.log('--- New Booking/Contact Request ---');
-  console.log(`Name: ${name}`);
-  console.log(`Email: ${email}`);
-  console.log(`Phone: ${phone}`);
-  console.log(`Subject: ${subject}`);
-  console.log(`Preferred Time: ${preferredTime}`);
-  console.log(`Message: ${message}`);
-  console.log('-----------------------------------');
+  const nodemailer = require('nodemailer');
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'abidnewaz14@gmail.com',
+    pass: 'KelviNxABID2008@#@'   // Use a Gmail App Password
+  }
+});
+
+await transporter.sendMail({
+  from: '"Website" <your@gmail.com>',
+  to: 'abidnewaz14@gmail.com',
+  subject: `New Booking Request from ${name}`,
+  text: `Name: ${name}\nEmail: ${email}\nPhone: ${phone}\nSubject: ${subject}\nPreferred Time: ${preferredTime}\nMessage: ${message}`
+});
 
   // Respond with success
   res.json({ success: true, message: 'Message received! Abid will get back to you shortly.' });
