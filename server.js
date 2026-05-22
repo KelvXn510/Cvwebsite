@@ -13,13 +13,13 @@ app.get('/', (req, res) => {
 });
 
 // Contact form endpoint
-app.post('/contact', (req, res) => {
+app.post('/contact',async (req, res) => {
   const { name, email, phone, subject, message, preferredTime } = req.body;
 
   // Log to console (in production, replace with nodemailer or a DB)
   const nodemailer = require('nodemailer');
 
-const transporter = nodemailer.createTransport({
+  const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
     user: process.env.EMAIL_USER,
