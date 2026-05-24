@@ -19,7 +19,28 @@ A Node.js personal website for Abid Newaz, featuring a full CV page, about secti
 npm install
 ```
 
-### 2. Start the server
+### 2. Configure email (required for the booking form)
+
+#### Option A (recommended): EmailJS (client-side, free tier)
+
+1. Create an EmailJS account and connect your Gmail (or other service).
+2. Create an email template with variables: `name`, `email`, `phone`, `subject`, `preferredTime`, `message`.
+3. Copy your **Public Key**, **Service ID**, and **Template ID**.
+4. Update the config in `public/js/main.js`.
+
+#### Option B (server-side): Nodemailer
+
+Create a `.env` file in the project root (use `.env.example` as a template):
+
+```
+EMAIL_USER=your@gmail.com
+EMAIL_PASS=your-app-password
+EMAIL_TO=abidnewaz14@gmail.com
+```
+
+For Gmail, generate an App Password and use that for `EMAIL_PASS`.
+
+### 3. Start the server
 
 ```bash
 npm start
@@ -48,34 +69,46 @@ abid-website/
 
 ---
 
-## 📧 Contact Form
+## 📧 Contact Form (EmailJS overview)
 
-Form submissions are currently logged to the console. To receive real email notifications, install nodemailer and add your email credentials:
+EmailJS sends the booking email directly from the browser using a public key, so no server credentials are stored in this repo. The free plan currently allows 200 requests per month.
 
-```bash
-npm install nodemailer
-```
+**How it works**
 
-Then in `server.js`, replace the `console.log` block with:
+- The EmailJS SDK is loaded in `views/index.html` before `public/js/main.js`.
+- EmailJS is initialized in `public/js/main.js` with your Public Key.
+- When the form is submitted, `emailjs.sendForm(...)` sends the form fields to your EmailJS template.
 
-```js
-const nodemailer = require('nodemailer');
+**Required EmailJS values**
 
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: 'your@gmail.com',
-    pass: 'your-app-password'   // Use a Gmail App Password
-  }
-});
+- Public Key (Account page)
+- Service ID (Email Services page)
+- Template ID (Email Templates page)
 
-await transporter.sendMail({
-  from: '"Website" <your@gmail.com>',
-  to: 'abidnewaz14@gmail.com',
-  subject: `New Booking Request from ${name}`,
-  text: `Name: ${name}\nEmail: ${email}\nPhone: ${phone}\nSubject: ${subject}\nPreferred Time: ${preferredTime}\nMessage: ${message}`
-});
-```
+**If you see** `Gmail_API: Request had insufficient authentication scopes`
+
+- Reconnect the Gmail service in EmailJS and allow "Send email on your behalf".
+- If it still fails, remove the service and add it again with full permission.
+
+## ✅ Files & lines to edit
+
+Update these when changing EmailJS values or wiring the form:
+
+- `public/js/main.js` → EmailJS config block (lines 2–6).
+- `public/js/main.js` → EmailJS init block (lines 13–14).
+- `public/js/main.js` → Form submission via `emailjs.sendForm(...)` (lines 114–124).
+- `views/index.html` → EmailJS SDK `<script>` include (line 571).
+
+Line numbers are from the current version and may shift if you edit the files.
+
+## ✅ Running on another machine
+
+1. Clone the repo.
+2. Run `npm install`.
+3. Add your EmailJS Public Key, Service ID, and Template ID in `public/js/main.js`.
+4. Run `npm start` and open http://localhost:3000.
+
+If you want server-side email instead, create `.env` and use the `/contact` endpoint in `server.js`.
 
 ---
 

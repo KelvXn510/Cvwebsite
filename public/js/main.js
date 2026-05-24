@@ -1,3 +1,19 @@
+/* ─── EmailJS config (client-side) ─── */
+const emailjsConfig = {
+  publicKey: '76eRx6RW5X7neYGH2',
+  serviceId: 'service_ckhghps',
+  templateId: 'template_fk6k29e'
+};
+
+const isEmailjsConfigured =
+  emailjsConfig.publicKey !== 'YOUR_PUBLIC_KEY' &&
+  emailjsConfig.serviceId !== 'YOUR_SERVICE_ID' &&
+  emailjsConfig.templateId !== 'YOUR_TEMPLATE_ID';
+
+if (typeof emailjs !== 'undefined' && isEmailjsConfigured) {
+  emailjs.init({ publicKey: emailjsConfig.publicKey });
+}
+
 /* ─── Scroll Reveal ─── */
 const revealObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
@@ -95,26 +111,21 @@ if (form) {
     btn.disabled = true;
 
     try {
-      const formData = new FormData(form);
-      const data = Object.fromEntries(formData.entries());
-
-      const res = await fetch('/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      });
-
-      const result = await res.json();
-
-      if (result.success) {
-        form.reset();
-        successMsg.style.display = 'block';
-        setTimeout(() => { successMsg.style.display = 'none'; }, 6000);
-      } else {
-        alert('Something went wrong. Please try again.');
+      if (!isEmailjsConfigured || typeof emailjs === 'undefined') {
+        throw new Error('EmailJS is not configured.');
       }
+
+      await emailjs.sendForm(
+        emailjsConfig.serviceId,
+        emailjsConfig.templateId,
+        form
+      );
+
+      form.reset();
+      successMsg.style.display = 'block';
+      setTimeout(() => { successMsg.style.display = 'none'; }, 6000);
     } catch (err) {
-      alert('Could not send message. Please try contacting directly via phone or email.');
+      alert('Could not send message. Please try again later.');
     } finally {
       submitText.style.display = 'inline';
       submitLoading.style.display = 'none';

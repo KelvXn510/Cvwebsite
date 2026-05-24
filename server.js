@@ -1,7 +1,11 @@
 const express = require('express');
 const path = require('path');
+
+require('dotenv').config();
+
 const app = express();
 const PORT = process.env.PORT || 3000;
+const EMAIL_TO = process.env.EMAIL_TO || 'abidnewaz14@gmail.com';
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
@@ -16,22 +20,28 @@ app.get('/', (req, res) => {
 app.post('/contact', async (req, res) => {
   const { name, email, phone, subject, message, preferredTime } = req.body;
 
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+    return res.status(500).json({
+      success: false,
+      message: 'Email service is not configured on the server.'
+    });
+  }
+
   try {
     const nodemailer = require('nodemailer');
 
     const transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      port: 465,
-      secure: true, // true for 465 false for other ports
+      service: 'gmail',
       auth: {
         user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS   // Use a Gmail App Password
+        pass: process.env.EMAIL_PASS // Use a Gmail App Password
       }
     });
 
     await transporter.sendMail({
-      from: '"cvwebsitean" <your@gmail.com>',
-      to: 'abidnewaz14@gmail.com',
+      from: `"Abid Newaz Website" <${process.env.EMAIL_USER}>`,
+      replyTo: email,
+      to: EMAIL_TO,
       subject: `New Booking Request from ${name}`,
       text: `Name: ${name}\nEmail: ${email}\nPhone: ${phone}\nSubject: ${subject}\nPreferred Time: ${preferredTime}\nMessage: ${message}`
     });
