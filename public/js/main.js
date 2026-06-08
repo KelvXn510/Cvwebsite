@@ -1,14 +1,12 @@
 /* ─── EmailJS config (client-side) ─── */
 const emailjsConfig = {
-  publicKey: '76eRx6RW5X7neYGH2',
-  serviceId: 'service_ckhghps',
-  templateId: 'template_fk6k29e'
+  publicKey: 'XxRhBbtrkE2MrZWa1',
+  serviceId: 'service_sm09jrf',
+  templateId: 'template_7u6j5ih'
 };
 
 const isEmailjsConfigured =
-  emailjsConfig.publicKey !== 'XxRhBbtrkE2MrZWa1' &&
-  emailjsConfig.serviceId !== 'service_sm09jrf' &&
-  emailjsConfig.templateId !== 'template_7u6j5ih';
+  Boolean(emailjsConfig.publicKey && emailjsConfig.serviceId && emailjsConfig.templateId);
 
 if (typeof emailjs !== 'undefined' && isEmailjsConfigured) {
   emailjs.init({ publicKey: emailjsConfig.publicKey });
