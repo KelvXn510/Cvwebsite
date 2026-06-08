@@ -1,11 +1,11 @@
-# Abid Newaz — Personal Website
+# Abid Newaz - Personal Website
 
 A Node.js personal website for Abid Newaz, featuring a full CV page, about section, tutoring profile, achievements timeline, passion projects, and a contact/booking form.
 
 ## Tech Stack
 
-- **Node.js** + **Express** — lightweight server
-- **Vanilla HTML/CSS/JS** — no frontend framework needed
+- **Node.js** + **Express**: lightweight server
+- **Vanilla HTML/CSS/JS**: no frontend framework needed
 - Fonts: Cormorant Garamond + DM Sans (matching the CV)
 - Colour scheme: `#1e2026` dark sidebar, `#b08d57` gold, `#f8f5f0` warm background
 
@@ -148,4 +148,4 @@ For Railway (recommended for simplicity):
 1. Push to GitHub
 2. Go to [railway.app](https://railway.app)
 3. "New Project" → "Deploy from GitHub repo"
-4. Done — live URL provided automatically
+4. Done - live URL provided automatically
